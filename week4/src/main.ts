@@ -7,6 +7,7 @@ const main = async () => {
 
     let height: Array<number> = []
     let height2: Array<number> = []
+    let height3: Array<number> = []
 
     // display application properly
     document.body.style.margin = '0';
@@ -26,12 +27,14 @@ const main = async () => {
     for (let i=0; i<15*Math.PI/16; i+=Math.PI/16){
         height.push(-600*Math.abs(Math.sin(i)),20)  
         height2.push(-400*Math.abs(Math.sin(i)),20)  
+        height3.push(-800*Math.abs(Math.sin(i)),20)  
     }
 
-    for (let i = 0; i<3;i++){
+    for (let i = 0; i<20;i++){
         for (let i = 19*Math.PI/16; i<31*Math.PI/16; i+=Math.PI/16){
             height.push(-600*Math.abs(Math.sin(i)),20)
             height2.push(-400*Math.abs(Math.sin(i)),20)
+            height3.push(-800*Math.abs(Math.sin(i)),20)
         }
     }
     
@@ -46,29 +49,47 @@ const main = async () => {
         
         graphics.clear()
 
+    
+        //purple wave
         for (let i=0; i<height2.length-4; i++){
         
-            graphics.beginFill(0x7872e0,.6)
-            graphics.drawRoundedRect(-250+i*50,window.innerHeight+80,40,height2[i+Math.floor(counter/1.5)],20)
+            graphics.beginFill(0x7872e0,.2)
+            graphics.drawRoundedRect(-250+i*35,window.innerHeight+80,70,-250+height2[i+Math.floor(counter/3)],20)
             graphics.endFill()
-            
+
+            if (i>height2.length-5){
+                i = 0
+            }
 
         }
 
+        //teal
         for (let i=0; i<height.length-4; i++){
         
-            graphics.beginFill(0x81acc7,.6)
-            graphics.drawRoundedRect(i*30,window.innerHeight+80,40,height[i+Math.floor(counter)],20)
+            graphics.beginFill(0x65c3d6,.6)
+            graphics.drawRoundedRect(i*20,window.innerHeight+80,40,height[i+Math.floor(counter*2)],20)
             graphics.endFill()
-            
+
+            if (i>height2.length-5){
+                i = 0
+            }
+
+        }
+
+        //blue
+        for (let i=0; i<height3.length-4; i++){
+        
+            graphics.beginFill(0x81acc7,.8)
+            graphics.drawRoundedRect(i*28+50,window.innerHeight+80,56,100+height[i+Math.floor(counter)],20)
+            graphics.endFill()
+
+            if (i>height2.length-5){
+                i = 0
+            }
 
         }
         
-
-
-
-   
-        
+     
     }
     )
    
