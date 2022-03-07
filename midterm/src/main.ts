@@ -1,33 +1,35 @@
 import * as PIXI from 'pixi.js'
-import { Model, SceneState } from './model/model'
-import { SceneOne } from './views/sceneOne';
-import { SceneTwo } from './views/sceneTwo';
-import { gsap } from "gsap";
-import * as filters from 'pixi-filters'
-import { AdjustmentFilter } from 'pixi-filters';
-import { guiSetup } from './controllers/gui';
-
-let mModel = new Model();
-let sceneOne: SceneOne = new SceneOne(mModel);
-let sceneTwo: SceneTwo = new SceneTwo(mModel);
-
-let tl = gsap.timeline();
-
-let graphs: Array<PIXI.Graphics> = []
-let sizes: Array<any> = []
-let colors: Array<any> = []
+import { Container, Texture } from 'pixi.js';
 
 const load = (app: PIXI.Application) => {
     return new Promise<void>((resolve) => {
-        app.loader.add('world1', 'assets/hello-world.png').load(() => {
-            resolve();
+        app.loader
+        .add('base', 'assets/base.png')
+        .add('socks', 'assets/socks.png')
+        .add('legWarmers', 'assets/legWarmers.png')
+        .add('converse', 'assets/converse.png')
+        .add('dunks', 'assets/dunks.png')
+        .add('boots', 'assets/boots.png')
+        .add('skirt', 'assets/skirt.png')
+        .add('blackPants', 'assets/blackPants.png')
+        .add('brownPants', 'assets/brownPants.png')
+        .add('whiteTN', 'assets/whiteTN.png')
+        .add('hoodie', 'assets/hoodie.png')
+        .add('sweater', 'assets/sweater.png')
+        .add('mask', 'assets/mask.png')
+        .add('hairDown', 'assets/hairDown.png')
+        .add('bun', 'assets/bun.png')
+        .add('braid', 'assets/braid.png')
+        .load(() => {
+          resolve();
         });
     });
 };
 
 const main = async () => {
     // Actual app
-    let app = new PIXI.Application({antialias: true, backgroundColor: 0x113311});
+    let app = new PIXI.Application({antialias: true, backgroundColor: 0xbac9e0});
+
 
     // Display application properly
     document.body.style.margin = '0';
@@ -40,59 +42,300 @@ const main = async () => {
     // Load assets
     await load(app);
 
-    let sprite = new PIXI.Sprite(app.loader.resources[`world1`].texture);
-    sprite.scale.set(0.5, 0.5)
-    sprite.anchor.set(0.5, 0.5)
-    sprite.interactive = true;
-
-    sprite.x = window.innerWidth/2
-    sprite.y = 0// window.innerHeight/2
-
-    sceneOne.sprite = sprite;
-    sceneOne.container.addChild(sprite);
-
-    app.stage.addChild(sceneOne.container);
-    app.stage.addChild(sceneTwo.container);
+    //create container for character
+    let charContainer = new Container();
 
 
-	for (let i = 0; i < 10; i++) {
-		const element = new PIXI.Graphics();
-		element.x = window.innerWidth/2
-		element.y = window.innerHeight/2
+    //draw character rect
+    let charRect = new PIXI.Graphics();
+    charRect.lineStyle(2,0x7177a8);
+    charRect.beginFill(0xfafafa);
+    charRect.drawRoundedRect(-200,-325,400,650,20);
+    charContainer.addChild(charRect);
 
-		element.x += 150 * Math.cos(i/10*Math.PI*2)
-		element.y += 150 * Math.sin(i/10*Math.PI*2)	
 
-		let adjustment = new filters.AdjustmentFilter();
-		element.filters = [adjustment]
 
-		graphs.push(element)
-		app.stage.addChild(element)
+ 
+    //load assets as sprites
+    let base = new PIXI.Sprite(app.loader.resources['base'].texture);
+    let socks = new PIXI.Sprite(app.loader.resources['socks'].texture);
+    let legWarmers = new PIXI.Sprite(app.loader.resources['legWarmers'].texture);
+    let converse = new PIXI.Sprite(app.loader.resources['converse'].texture);
+    let dunks = new PIXI.Sprite(app.loader.resources['dunks'].texture);
+    let boots = new PIXI.Sprite(app.loader.resources['boots'].texture);
+    let skirt = new PIXI.Sprite(app.loader.resources['skirt'].texture);
+    let blackPants = new PIXI.Sprite(app.loader.resources['blackPants'].texture);
+    let brownPants = new PIXI.Sprite(app.loader.resources['brownPants'].texture);
+    let whiteTN = new PIXI.Sprite(app.loader.resources['whiteTN'].texture);
+    let hoodie = new PIXI.Sprite(app.loader.resources['hoodie'].texture);
+    let sweater = new PIXI.Sprite(app.loader.resources['sweater'].texture);
+    let mask = new PIXI.Sprite(app.loader.resources['mask'].texture);
+    let hairDown = new PIXI.Sprite(app.loader.resources['hairDown'].texture);
+    let bun = new PIXI.Sprite(app.loader.resources['bun'].texture);
+    let braid = new PIXI.Sprite(app.loader.resources['braid'].texture);
 
-		sizes[i] = {
-			value: 10
-		};
+    //anchor sprites
+    base.anchor.set(0.5,0.5)
+    socks.anchor.set(0.5, 0.5)
+    legWarmers.anchor.set(0.5, 0.5)
+    converse.anchor.set(0.5,0.5)
+    dunks.anchor.set(0.5, 0.5)
+    boots.anchor.set(0.5, 0.5)
+    skirt.anchor.set(0.5,0.5)
+    blackPants.anchor.set(0.5, 0.5)
+    brownPants.anchor.set(0.5, 0.5)
+    whiteTN.anchor.set(0.5,0.5)
+    hoodie.anchor.set(0.5, 0.5)
+    sweater.anchor.set(0.5, 0.5)
+    mask.anchor.set(0.5,0.5)
+    hairDown.anchor.set(0.5, 0.5)
+    bun.anchor.set(0.5, 0.5)
+    braid.anchor.set(0.5,0.5)
 
-		colors[i] = {
-			r: 1,
-			g: 1,
-			b: 1
-		}
-	}
+    // let itemContainer = new Container();
+    // itemContainer.addChild(socks)
+    // itemContainer.addChild(legWarmers)
+    // itemContainer.addChild(converse)
+    // itemContainer.addChild(dunks)
+    // itemContainer.addChild(boots)
+    // itemContainer.addChild(skirt)
+    // itemContainer.addChild(blackPants)
+    // itemContainer.addChild(brownPants)
+    // itemContainer.addChild(whiteTN)
+    // itemContainer.addChild(hoodie)
+    // itemContainer.addChild(sweater)
+    // itemContainer.addChild(mask)
+    // itemContainer.addChild(hairDown)
+    // itemContainer.addChild(bun)
+    // itemContainer.addChild(braid)
+
+    //add base
+    charContainer.addChild(base);
+
+
+    charContainer.x = window.innerWidth/2 + 300;
+    charContainer.y = window.innerHeight/2;
+
+    // //add clothes
+    // itemContainer.x = window.innerWidth/2 + 300;
+    // itemContainer.y = window.innerHeight/2;
+
+    let Hair: Array<PIXI.Sprite> =[];
+    let Top: Array<PIXI.Sprite> =[];
+    let Bottom: Array<PIXI.Sprite> =[];
+    let Accessories: Array<PIXI.Sprite> =[];
+
+    let butX = 100
+    let butY = 100 
+    let butWidth = 100
+    let butHeight = 100
+
+
+    Hair.push(hairDown)
+    //add stripes to bg
+    let stripes = new PIXI.Graphics();
+
+    for (let i=0; i<window.innerHeight; i+=20){
+        stripes.lineStyle(5, 0xcfcae6);
+
+        stripes.moveTo(0,i);
+        stripes.lineTo(window.innerWidth,i);
+        stripes.lineTo(0,i)
+    }
+
+    app.stage.addChild(stripes);
+    app.stage.addChild(charContainer);
+    //app.stage.addChild(itemContainer)
+
+    //hair
+
+    let button = new PIXI.Graphics;
+    button.beginFill(0xe6e9f0);         
+    button.drawRoundedRect(butX,butY,butWidth,butHeight,15);   
+    
+    //u can now hover over button
+    button.interactive = true;
+    button.buttonMode = true;
+
+    //specify interaction, corresponding reaction
+    button.on("pointerdown", onClickTop);     
+    // button.on("pointerup", unClickTop);     
+    // button.on("pointerover", onHoverTop);     
+    // button.on("pointerout",onUnhoverTop);
+    let counterHair = 0;
+
+    
+    //top
+
+    let buttonTop = new PIXI.Graphics;
+    buttonTop.beginFill(0xe6e9f0);         
+    buttonTop.drawRoundedRect(butX,butY,butWidth,butHeight,15);   
+    
+    //u can now hover over button
+    buttonTop.interactive = true;
+    buttonTop.buttonMode = true;
+
+    //specify interaction, corresponding reaction
+    buttonTop.on("pointerdown", onClickTop);     
+    let counterTop = 0;
+
+
+    //bottom
+    let buttonBottom = new PIXI.Graphics;
+    buttonBottom.beginFill(0xe6e9f0);         
+    buttonBottom.drawRoundedRect(butX,butY,butWidth,butHeight,15);   
+    
+    buttonBottom.interactive = true;
+    buttonBottom.buttonMode = true;
+
+    buttonBottom.on("pointerdown", onClickBottom);     
+    let counterBottom = 0;
+
+    //shoes
+    let buttonShoes = new PIXI.Graphics;
+    buttonShoes.beginFill(0xe6e9f0);         
+    buttonShoes.drawRoundedRect(butX,butY,butWidth,butHeight,15);   
+    
+    buttonShoes.interactive = true;
+    buttonShoes.buttonMode = true;
+
+    buttonShoes.on("pointerdown", onClickShoes);     
+    let counterShoes = 0;
+
+    //accessories
+    let buttonAccessories = new PIXI.Graphics;
+    buttonAccessories.beginFill(0xe6e9f0);         
+    buttonAccessories.drawRoundedRect(butX,butY,butWidth,butHeight,15);   
+    
+    buttonAccessories.interactive = true;
+    buttonAccessories.buttonMode = true;
+
+    buttonAccessories.on("pointerdown", onClickAccessories);     
+    let counterAccessories = 0;
+
+
+
+    function onClickShoes(){
+        buttonShoes.clear();         
+        buttonShoes.beginFill(0xa9a4eb);         
+        buttonShoes.drawRoundedRect(butX,butY,butWidth,butHeight,15);   
+        
+        if (counterShoes == 0){
+            charContainer.removeChild(dunks);
+            charContainer.addChild(boots);}
+        else if (counterShoes == 1){
+            charContainer.removeChild(boots);
+            charContainer.addChild(converse);
+        }
+        else if (counterShoes == 2){
+            charContainer.removeChild(converse);
+            charContainer.addChild(dunks);
+
+        }
+        
+        counterShoes ++;
+   
+    }          
+
+    function onClickAccessories(){
+        buttonAccessories.clear();         
+        buttonAccessories.beginFill(0xa9a4eb);         
+        buttonAccessories.drawRoundedRect(butX,butY,butWidth,butHeight,15);   
+        
+        if (counterAccessories == 0){
+            charContainer.removeChild(legWarmers);
+            charContainer.addChild(mask);}
+        else if (counterAccessories == 1){
+            charContainer.removeChild(mask);
+            charContainer.addChild(socks);
+        }
+        else if (counterAccessories == 2){
+            charContainer.removeChild(socks);
+            charContainer.addChild(legWarmers);
+
+        }
+        
+        counterAccessories ++;
+    }          
+
+
+
+    function onClickTop(){
+        buttonTop.clear();         
+        buttonTop.beginFill(0xa9a4eb);         
+        buttonTop.drawRoundedRect(butX,butY,butWidth,butHeight,15);   
+        
+        if (counterTop == 0){
+            charContainer.removeChild(whiteTN);
+            charContainer.addChild(sweater);}
+        else if (counterTop == 1){
+            charContainer.removeChild(sweater);
+            charContainer.addChild(hoodie);
+        }
+        else if (counterTop == 2){
+            charContainer.removeChild(hoodie);
+            charContainer.addChild(whiteTN);
+
+        }
+    
+        counterTop ++;
+
+    }          
+
+    function onClickBottom(){
+        buttonBottom.clear();         
+        buttonBottom.beginFill(0xa9a4eb);         
+        buttonBottom.drawRoundedRect(butX,butY,butWidth,butHeight,15);   
+        
+        if (counterBottom == 0){
+            charContainer.removeChild(skirt);
+            charContainer.addChild(brownPants);}
+        else if (counterBottom == 1){
+            charContainer.removeChild(brownPants);
+            charContainer.addChild(blackPants);
+        }
+        else if (counterBottom == 2){
+            charContainer.removeChild(blackPants);
+            charContainer.addChild(skirt);
+
+        }
+        
+        counterBottom ++;
+        
+
+    }          
+
+
+    function onClickHair(){
+        button.clear();         
+        button.beginFill(0xa9a4eb);         
+        button.drawRoundedRect(butX,butY,butWidth,butHeight,15);   
+        
+        if (counterHair == 0){
+            charContainer.removeChild(braid);
+            charContainer.addChild(hairDown);}
+        else if (counterHair == 1){
+            charContainer.removeChild(hairDown);
+            charContainer.addChild(bun);
+        }
+        else if (counterHair == 2){
+            charContainer.removeChild(bun);
+            charContainer.addChild(braid);
+        }
+        
+        counterHair ++;
+
+    }          
+
+    app.stage.addChild(buttonTop);
+    app.stage.addChild(buttonBottom);
+    app.stage.addChild(button);
+    app.stage.addChild(buttonShoes);
+    app.stage.addChild(buttonAccessories);
+
 
     app.stage.interactive = true
-    app.stage.hitArea = new PIXI.Polygon([
-        0,0,
-        window.innerWidth, 0,
-        window.innerWidth, window.innerHeight,
-        0, window.innerHeight
-    ])
-
-    app.stage.on('pointerdown', event => {
-        mModel.mousePos.set(event.data.global.x, event.data.global.y)
-		// console.log(colors)
-    })
-
+    
     // Handle window resizing
     window.addEventListener('resize', (_e) => {
         app.renderer.resize(window.innerWidth, window.innerHeight);
@@ -104,26 +347,9 @@ const main = async () => {
         ]);
     });
 
+   
+
     document.body.appendChild(app.view);
-
-    guiSetup(mModel, tl);
-
-
-	sizes.forEach((size, i) => {
-		tl.to(size,
-			{
-				value: 100,
-				duration: 2
-			}, "-=3.80")
-		tl.to(colors[i],
-			{
-				r: Math.random(),
-				g: Math.random(),
-				b: Math.random(),
-				duration: 4
-			}, "<")
-	})
-
 
     app.ticker.add(update);
 };
@@ -131,36 +357,7 @@ const main = async () => {
 // Cannot be an arrow function. Arrow functions cannot have a 'this' parameter.
 function update(delta: number) {
 
-    mModel.elapsedTime += delta;
-
-	graphs.forEach((graph, i) => {
-		graph.clear()
-		if(graph.filters != null && 
-            graph.filters[0] instanceof AdjustmentFilter) {
-			graph.filters[0].red = colors[i].r;
-			graph.filters[0].green = colors[i].g;
-			graph.filters[0].blue = colors[i].b;
-		}
-		graph.beginFill(0xffffff)
-		graph.drawCircle(0,0,sizes[i].value)
-	})
-
-    switch (mModel.sceneState) {
-        case SceneState.first:
-            sceneOne.container.visible = true;
-            sceneTwo.container.visible = false;
-            sceneOne.update();
-            break;
-        
-        case SceneState.second:
-            sceneOne.container.visible = false;
-            sceneTwo.container.visible = true;
-            sceneTwo.update();
-            break;
-    
-        default:
-            break;
     }
-};
 
 main();
+
