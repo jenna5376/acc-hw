@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js'
-import { Container, Texture } from 'pixi.js';
+import { Container, Sprite, Texture } from 'pixi.js';
 
 const load = (app: PIXI.Application) => {
     return new Promise<void>((resolve) => {
@@ -20,6 +20,11 @@ const load = (app: PIXI.Application) => {
         .add('hairDown', 'assets/hairDown.png')
         .add('bun', 'assets/bun.png')
         .add('braid', 'assets/braid.png')
+        .add('accessoriesIcon', 'assets/accessoriesIcon.png')
+        .add('bottomIcon', 'assets/bottomIcon.png')
+        .add('topIcon', 'assets/topIcon.png')
+        .add('hairIcon', 'assets/hairIcon.png')
+        .add('shoeIcon', 'assets/shoeIcon.png')
         .load(() => {
           resolve();
         });
@@ -44,6 +49,8 @@ const main = async () => {
 
     //create container for character
     let charContainer = new Container();
+
+   
 
 
     //draw character rect
@@ -73,6 +80,12 @@ const main = async () => {
     let hairDown = new PIXI.Sprite(app.loader.resources['hairDown'].texture);
     let bun = new PIXI.Sprite(app.loader.resources['bun'].texture);
     let braid = new PIXI.Sprite(app.loader.resources['braid'].texture);
+    let hairIcon = new PIXI.Sprite(app.loader.resources['hairIcon'].texture);
+    let shoeIcon = new PIXI.Sprite(app.loader.resources['shoeIcon'].texture);
+    let topIcon = new PIXI.Sprite(app.loader.resources['topIcon'].texture);
+    let bottomIcon = new PIXI.Sprite(app.loader.resources['bottomIcon'].texture);
+    let accessoriesIcon = new PIXI.Sprite(app.loader.resources['accessoriesIcon'].texture);
+
 
     //anchor sprites
     base.anchor.set(0.5,0.5)
@@ -104,10 +117,7 @@ const main = async () => {
     // itemContainer.x = window.innerWidth/2 + 300;
     // itemContainer.y = window.innerHeight/2;
 
-    let Hair: Array<PIXI.Sprite> =[];
-    let Top: Array<PIXI.Sprite> =[];
-    let Bottom: Array<PIXI.Sprite> =[];
-    let Accessories: Array<PIXI.Sprite> =[];
+ 
 
     let butX = 500
     let butY = 100 
@@ -115,7 +125,6 @@ const main = async () => {
     let butHeight = 100
 
 
-    Hair.push(hairDown)
     //add stripes to bg
     let stripes = new PIXI.Graphics();
 
@@ -203,6 +212,8 @@ const main = async () => {
     buttonTop.on("pointerdown", onClickTop);     
     let counterTop = 0;
 
+
+    
 
     //bottom
     let buttonBottom = new PIXI.Graphics;
@@ -309,6 +320,19 @@ const main = async () => {
     app.stage.addChild(button);
     app.stage.addChild(buttonShoes);
     app.stage.addChild(buttonAccessories);
+
+
+    accessoriesIcon.x = 100;
+    accessoriesIcon.y = 100;
+
+
+    app.stage.addChild(accessoriesIcon);
+    app.stage.addChild(bottomIcon);
+    app.stage.addChild(hairIcon);
+    app.stage.addChild(shoeIcon);
+    app.stage.addChild(topIcon);
+
+
 
     //box
     let box = new PIXI.Graphics;
