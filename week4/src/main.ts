@@ -54,7 +54,7 @@ const main = async () => {
         for (let i=0; i<height2.length-4; i++){
         
             graphics.beginFill(0x7872e0,.2)
-            graphics.drawRoundedRect(-250+i*35,window.innerHeight+80,70,-250+height2[i+Math.floor(counter/3)],20)
+            graphics.drawRoundedRect(-250+i*35,window.innerHeight+20,70,-250+height2[i+Math.floor(counter/3)],20)
             graphics.endFill()
 
             if (i>height2.length-5){
