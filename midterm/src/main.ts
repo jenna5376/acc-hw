@@ -92,28 +92,12 @@ const main = async () => {
     bun.anchor.set(0.5, 0.5)
     braid.anchor.set(0.5,0.5)
 
-    // let itemContainer = new Container();
-    // itemContainer.addChild(socks)
-    // itemContainer.addChild(legWarmers)
-    // itemContainer.addChild(converse)
-    // itemContainer.addChild(dunks)
-    // itemContainer.addChild(boots)
-    // itemContainer.addChild(skirt)
-    // itemContainer.addChild(blackPants)
-    // itemContainer.addChild(brownPants)
-    // itemContainer.addChild(whiteTN)
-    // itemContainer.addChild(hoodie)
-    // itemContainer.addChild(sweater)
-    // itemContainer.addChild(mask)
-    // itemContainer.addChild(hairDown)
-    // itemContainer.addChild(bun)
-    // itemContainer.addChild(braid)
-
+ 
     //add base
     charContainer.addChild(base);
 
 
-    charContainer.x = window.innerWidth/2 + 300;
+    charContainer.x = window.innerWidth/2 + 400;
     charContainer.y = window.innerHeight/2;
 
     // //add clothes
@@ -125,7 +109,7 @@ const main = async () => {
     let Bottom: Array<PIXI.Sprite> =[];
     let Accessories: Array<PIXI.Sprite> =[];
 
-    let butX = 100
+    let butX = 500
     let butY = 100 
     let butWidth = 100
     let butHeight = 100
@@ -151,115 +135,44 @@ const main = async () => {
 
     let button = new PIXI.Graphics;
     button.beginFill(0xe6e9f0);         
-    button.drawRoundedRect(butX,butY,butWidth,butHeight,15);   
+    button.drawRoundedRect(butX+200,butY,butWidth,butHeight,15);   
     
     //u can now hover over button
     button.interactive = true;
     button.buttonMode = true;
 
     //specify interaction, corresponding reaction
-    button.on("pointerdown", onClickTop);     
-    // button.on("pointerup", unClickTop);     
-    // button.on("pointerover", onHoverTop);     
-    // button.on("pointerout",onUnhoverTop);
+    button.on("pointerdown", onClickHair);     
     let counterHair = 0;
+
+    function onClickHair(){
+        button.clear();         
+        button.beginFill(0xa9a4eb);         
+        button.drawRoundedRect(butX+200,butY,butWidth,butHeight,15);   
+        
+        if (counterHair == 0){
+            charContainer.removeChild(braid);
+            charContainer.addChild(hairDown);}
+        else if (counterHair == 1){
+            charContainer.removeChild(hairDown);
+            charContainer.addChild(bun);
+        }
+        else if (counterHair == 2){
+            charContainer.removeChild(bun);
+            charContainer.addChild(braid);
+        }
+        
+        counterHair ++;
+
+    }          
 
     
     //top
 
     let buttonTop = new PIXI.Graphics;
     buttonTop.beginFill(0xe6e9f0);         
-    buttonTop.drawRoundedRect(butX,butY,butWidth,butHeight,15);   
+    buttonTop.drawRoundedRect(butX,butY,butWidth,butHeight,15); 
     
-    //u can now hover over button
-    buttonTop.interactive = true;
-    buttonTop.buttonMode = true;
-
-    //specify interaction, corresponding reaction
-    buttonTop.on("pointerdown", onClickTop);     
-    let counterTop = 0;
-
-
-    //bottom
-    let buttonBottom = new PIXI.Graphics;
-    buttonBottom.beginFill(0xe6e9f0);         
-    buttonBottom.drawRoundedRect(butX,butY,butWidth,butHeight,15);   
-    
-    buttonBottom.interactive = true;
-    buttonBottom.buttonMode = true;
-
-    buttonBottom.on("pointerdown", onClickBottom);     
-    let counterBottom = 0;
-
-    //shoes
-    let buttonShoes = new PIXI.Graphics;
-    buttonShoes.beginFill(0xe6e9f0);         
-    buttonShoes.drawRoundedRect(butX,butY,butWidth,butHeight,15);   
-    
-    buttonShoes.interactive = true;
-    buttonShoes.buttonMode = true;
-
-    buttonShoes.on("pointerdown", onClickShoes);     
-    let counterShoes = 0;
-
-    //accessories
-    let buttonAccessories = new PIXI.Graphics;
-    buttonAccessories.beginFill(0xe6e9f0);         
-    buttonAccessories.drawRoundedRect(butX,butY,butWidth,butHeight,15);   
-    
-    buttonAccessories.interactive = true;
-    buttonAccessories.buttonMode = true;
-
-    buttonAccessories.on("pointerdown", onClickAccessories);     
-    let counterAccessories = 0;
-
-
-
-    function onClickShoes(){
-        buttonShoes.clear();         
-        buttonShoes.beginFill(0xa9a4eb);         
-        buttonShoes.drawRoundedRect(butX,butY,butWidth,butHeight,15);   
-        
-        if (counterShoes == 0){
-            charContainer.removeChild(dunks);
-            charContainer.addChild(boots);}
-        else if (counterShoes == 1){
-            charContainer.removeChild(boots);
-            charContainer.addChild(converse);
-        }
-        else if (counterShoes == 2){
-            charContainer.removeChild(converse);
-            charContainer.addChild(dunks);
-
-        }
-        
-        counterShoes ++;
-   
-    }          
-
-    function onClickAccessories(){
-        buttonAccessories.clear();         
-        buttonAccessories.beginFill(0xa9a4eb);         
-        buttonAccessories.drawRoundedRect(butX,butY,butWidth,butHeight,15);   
-        
-        if (counterAccessories == 0){
-            charContainer.removeChild(legWarmers);
-            charContainer.addChild(mask);}
-        else if (counterAccessories == 1){
-            charContainer.removeChild(mask);
-            charContainer.addChild(socks);
-        }
-        else if (counterAccessories == 2){
-            charContainer.removeChild(socks);
-            charContainer.addChild(legWarmers);
-
-        }
-        
-        counterAccessories ++;
-    }          
-
-
-
     function onClickTop(){
         buttonTop.clear();         
         buttonTop.beginFill(0xa9a4eb);         
@@ -280,12 +193,32 @@ const main = async () => {
     
         counterTop ++;
 
-    }          
+    }    
+    
+    //u can now hover over button
+    buttonTop.interactive = true;
+    buttonTop.buttonMode = true;
+
+    //specify interaction, corresponding reaction
+    buttonTop.on("pointerdown", onClickTop);     
+    let counterTop = 0;
+
+
+    //bottom
+    let buttonBottom = new PIXI.Graphics;
+    buttonBottom.beginFill(0xe6e9f0);         
+    buttonBottom.drawRoundedRect(butX,butY+150,butWidth,butHeight,15);   
+    
+    buttonBottom.interactive = true;
+    buttonBottom.buttonMode = true;
+
+    buttonBottom.on("pointerdown", onClickBottom);     
+    let counterBottom = 0;
 
     function onClickBottom(){
         buttonBottom.clear();         
         buttonBottom.beginFill(0xa9a4eb);         
-        buttonBottom.drawRoundedRect(butX,butY,butWidth,butHeight,15);   
+        buttonBottom.drawRoundedRect(butX,butY+150,butWidth,butHeight,15);   
         
         if (counterBottom == 0){
             charContainer.removeChild(skirt);
@@ -305,26 +238,70 @@ const main = async () => {
 
     }          
 
+    //shoes
+    let buttonShoes = new PIXI.Graphics;
+    buttonShoes.beginFill(0xe6e9f0);         
+    buttonShoes.drawRoundedRect(butX,butY+300,butWidth,butHeight,15);   
+    
+    buttonShoes.interactive = true;
+    buttonShoes.buttonMode = true;
 
-    function onClickHair(){
-        button.clear();         
-        button.beginFill(0xa9a4eb);         
-        button.drawRoundedRect(butX,butY,butWidth,butHeight,15);   
-        
-        if (counterHair == 0){
-            charContainer.removeChild(braid);
-            charContainer.addChild(hairDown);}
-        else if (counterHair == 1){
-            charContainer.removeChild(hairDown);
-            charContainer.addChild(bun);
-        }
-        else if (counterHair == 2){
-            charContainer.removeChild(bun);
-            charContainer.addChild(braid);
-        }
-        
-        counterHair ++;
+    buttonShoes.on("pointerdown", onClickShoes);     
+    let counterShoes = 0;
 
+    function onClickShoes(){
+        buttonShoes.clear();         
+        buttonShoes.beginFill(0xa9a4eb);         
+        buttonShoes.drawRoundedRect(butX,butY+300,butWidth,butHeight,15);   
+        
+        if (counterShoes == 0){
+            charContainer.removeChild(dunks);
+            charContainer.addChild(boots);}
+        else if (counterShoes == 1){
+            charContainer.removeChild(boots);
+            charContainer.addChild(converse);
+        }
+        else if (counterShoes == 2){
+            charContainer.removeChild(converse);
+            charContainer.addChild(dunks);
+
+        }
+        
+        counterShoes ++;
+   
+    }    
+
+    //accessories
+    let buttonAccessories = new PIXI.Graphics;
+    buttonAccessories.beginFill(0xe6e9f0);         
+    buttonAccessories.drawRoundedRect(butX+200,butY +150,butWidth,butHeight,15);   
+    
+    buttonAccessories.interactive = true;
+    buttonAccessories.buttonMode = true;
+
+    buttonAccessories.on("pointerdown", onClickAccessories);     
+    let counterAccessories = 0;
+
+
+    function onClickAccessories(){
+        buttonAccessories.clear();         
+        buttonAccessories.beginFill(0xa9a4eb);         
+        buttonAccessories.drawRoundedRect(butX+200,butY +150,butWidth,butHeight,15);   
+        
+        if (counterAccessories == 0){
+            charContainer.removeChild(legWarmers);
+            charContainer.addChild(mask);}
+        else if (counterAccessories == 1){
+            charContainer.removeChild(mask);
+            charContainer.addChild(socks);
+        }
+        else if (counterAccessories == 2){
+            charContainer.removeChild(socks);
+            charContainer.addChild(legWarmers);
+
+        }
+        
+        counterAccessories ++;
     }          
 
     app.stage.addChild(buttonTop);
@@ -333,6 +310,12 @@ const main = async () => {
     app.stage.addChild(buttonShoes);
     app.stage.addChild(buttonAccessories);
 
+    //box
+    let box = new PIXI.Graphics;
+    box.beginFill(0xe6e9f0);         
+    box.drawRoundedRect(0,0,400,window.innerHeight,15);   
+    app.stage.addChild(box);
+   
 
     app.stage.interactive = true
     
