@@ -322,17 +322,26 @@ const main = async () => {
     app.stage.addChild(buttonAccessories);
 
 
-    accessoriesIcon.x = 100;
-    accessoriesIcon.y = 100;
+    accessoriesIcon.x = butX+200;
+    accessoriesIcon.y = butY+150;
 
+    bottomIcon.x = butX;
+    bottomIcon.y = butY+150;
+
+    hairIcon.x = butX+200;
+    hairIcon.y = butY;
+
+    shoeIcon.x = butX;
+    shoeIcon.y = butY+300;
+
+    topIcon.x = butX;
+    topIcon.y = butY;
 
     app.stage.addChild(accessoriesIcon);
     app.stage.addChild(bottomIcon);
     app.stage.addChild(hairIcon);
     app.stage.addChild(shoeIcon);
     app.stage.addChild(topIcon);
-
-
 
     //box
     let box = new PIXI.Graphics;
@@ -354,7 +363,6 @@ const main = async () => {
         ]);
     });
 
-   
 
     document.body.appendChild(app.view);
 
