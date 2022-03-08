@@ -1,8 +1,8 @@
 # midterm
 
-dress up game with stylized character
-five categories: hairstyle, top, bottom, accessory, shoes
-simply click on the item icon to switch up your character's look!
+- dress up game with stylized character
+- five categories: hairstyle, top, bottom, accessory, shoes
+- simply click on the item icon to switch up your character's look!
 
 ## dependencies
 the package.json comes pre-installed with pixi, typescript, and a few other helpful libraries
