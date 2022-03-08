@@ -35,7 +35,6 @@ const main = async () => {
     // Actual app
     let app = new PIXI.Application({antialias: true, backgroundColor: 0xbac9e0});
 
-
     // Display application properly
     document.body.style.margin = '0';
     app.renderer.view.style.position = 'absolute';
@@ -50,9 +49,6 @@ const main = async () => {
     //create container for character
     let charContainer = new Container();
 
-   
-
-
     //draw character rect
     let charRect = new PIXI.Graphics();
     charRect.lineStyle(2,0x7177a8);
@@ -60,9 +56,6 @@ const main = async () => {
     charRect.drawRoundedRect(-200,-325,400,650,20);
     charContainer.addChild(charRect);
 
-
-
- 
     //load assets as sprites
     let base = new PIXI.Sprite(app.loader.resources['base'].texture);
     let socks = new PIXI.Sprite(app.loader.resources['socks'].texture);
@@ -86,7 +79,6 @@ const main = async () => {
     let bottomIcon = new PIXI.Sprite(app.loader.resources['bottomIcon'].texture);
     let accessoriesIcon = new PIXI.Sprite(app.loader.resources['accessoriesIcon'].texture);
 
-
     //anchor sprites
     base.anchor.set(0.5,0.5)
     socks.anchor.set(0.5, 0.5)
@@ -105,59 +97,52 @@ const main = async () => {
     bun.anchor.set(0.5, 0.5)
     braid.anchor.set(0.5,0.5)
 
- 
     //add base
     charContainer.addChild(base);
-
-
-    charContainer.x = window.innerWidth/2 + 400;
+    charContainer.x = window.innerWidth/2 - 180;
     charContainer.y = window.innerHeight/2;
 
     // //add clothes
     // itemContainer.x = window.innerWidth/2 + 300;
     // itemContainer.y = window.innerHeight/2;
 
- 
-
-    let butX = 500
+    //item button settings 
+    let butX = 850
     let butY = 100 
-    let butWidth = 100
-    let butHeight = 100
-
+    let butWidth = 120
+    let butHeight = 120
 
     //add stripes to bg
     let stripes = new PIXI.Graphics();
 
     for (let i=0; i<window.innerHeight; i+=20){
         stripes.lineStyle(5, 0xcfcae6);
-
         stripes.moveTo(0,i);
         stripes.lineTo(window.innerWidth,i);
         stripes.lineTo(0,i)
     }
-
     app.stage.addChild(stripes);
     app.stage.addChild(charContainer);
     //app.stage.addChild(itemContainer)
 
     //hair
-
-    let button = new PIXI.Graphics;
-    button.beginFill(0xe6e9f0);         
-    button.drawRoundedRect(butX+200,butY,butWidth,butHeight,15);   
+    let buttonHair = new PIXI.Graphics;
+    buttonHair.beginFill(0xe6e9f0);         
+    buttonHair.drawRoundedRect(butX+200,butY,butWidth,butHeight,15);   
     
     //u can now hover over button
-    button.interactive = true;
-    button.buttonMode = true;
+    buttonHair.interactive = true;
+    buttonHair.buttonMode = true;
 
     //specify interaction, corresponding reaction
-    button.on("pointerdown", onClickHair);     
+    buttonHair.on("pointerdown", onClickHair);     
     let counterHair = 0;
 
+    //change hairstyle when button is pressed
     function onClickHair(){
-        button.clear();         
-        button.beginFill(0xa9a4eb);         
-        button.drawRoundedRect(butX+200,butY,butWidth,butHeight,15);   
+        buttonHair.clear();         
+        buttonHair.beginFill(0xa9a4eb);         
+        buttonHair.drawRoundedRect(butX+200,butY,butWidth,butHeight,15);   
         
         if (counterHair == 0){
             charContainer.removeChild(braid);
@@ -169,18 +154,21 @@ const main = async () => {
         else if (counterHair == 2){
             charContainer.removeChild(bun);
             charContainer.addChild(braid);
+            counterHair = -1;
         }
-        
         counterHair ++;
-
     }          
 
-    
+    //same interaction for different categories, items
+  
     //top
-
     let buttonTop = new PIXI.Graphics;
     buttonTop.beginFill(0xe6e9f0);         
     buttonTop.drawRoundedRect(butX,butY,butWidth,butHeight,15); 
+    buttonTop.interactive = true;
+    buttonTop.buttonMode = true;
+    buttonTop.on("pointerdown", onClickTop);     
+    let counterTop = 0;
     
     function onClickTop(){
         buttonTop.clear();         
@@ -197,32 +185,18 @@ const main = async () => {
         else if (counterTop == 2){
             charContainer.removeChild(hoodie);
             charContainer.addChild(whiteTN);
-
+            counterTop = -1;
         }
-    
         counterTop ++;
-
     }    
-    
-    //u can now hover over button
-    buttonTop.interactive = true;
-    buttonTop.buttonMode = true;
-
-    //specify interaction, corresponding reaction
-    buttonTop.on("pointerdown", onClickTop);     
-    let counterTop = 0;
-
-
     
 
     //bottom
     let buttonBottom = new PIXI.Graphics;
     buttonBottom.beginFill(0xe6e9f0);         
     buttonBottom.drawRoundedRect(butX,butY+150,butWidth,butHeight,15);   
-    
     buttonBottom.interactive = true;
     buttonBottom.buttonMode = true;
-
     buttonBottom.on("pointerdown", onClickBottom);     
     let counterBottom = 0;
 
@@ -241,22 +215,17 @@ const main = async () => {
         else if (counterBottom == 2){
             charContainer.removeChild(blackPants);
             charContainer.addChild(skirt);
-
+            counterBottom = -1;
         }
-        
         counterBottom ++;
-        
-
     }          
 
     //shoes
     let buttonShoes = new PIXI.Graphics;
     buttonShoes.beginFill(0xe6e9f0);         
     buttonShoes.drawRoundedRect(butX,butY+300,butWidth,butHeight,15);   
-    
     buttonShoes.interactive = true;
     buttonShoes.buttonMode = true;
-
     buttonShoes.on("pointerdown", onClickShoes);     
     let counterShoes = 0;
 
@@ -275,24 +244,19 @@ const main = async () => {
         else if (counterShoes == 2){
             charContainer.removeChild(converse);
             charContainer.addChild(dunks);
-
+            counterShoes = -1;
         }
-        
         counterShoes ++;
-   
     }    
 
     //accessories
     let buttonAccessories = new PIXI.Graphics;
     buttonAccessories.beginFill(0xe6e9f0);         
-    buttonAccessories.drawRoundedRect(butX+200,butY +150,butWidth,butHeight,15);   
-    
+    buttonAccessories.drawRoundedRect(butX+200,butY +150,butWidth,butHeight,15);    
     buttonAccessories.interactive = true;
     buttonAccessories.buttonMode = true;
-
     buttonAccessories.on("pointerdown", onClickAccessories);     
     let counterAccessories = 0;
-
 
     function onClickAccessories(){
         buttonAccessories.clear();         
@@ -309,46 +273,35 @@ const main = async () => {
         else if (counterAccessories == 2){
             charContainer.removeChild(socks);
             charContainer.addChild(legWarmers);
-
+            counterAccessories = -1;
         }
-        
         counterAccessories ++;
     }          
 
+    //add all the buttons
     app.stage.addChild(buttonTop);
     app.stage.addChild(buttonBottom);
-    app.stage.addChild(button);
+    app.stage.addChild(buttonHair);
     app.stage.addChild(buttonShoes);
     app.stage.addChild(buttonAccessories);
 
-
-    accessoriesIcon.x = butX+200;
-    accessoriesIcon.y = butY+150;
-
-    bottomIcon.x = butX;
-    bottomIcon.y = butY+150;
-
-    hairIcon.x = butX+200;
-    hairIcon.y = butY;
-
-    shoeIcon.x = butX;
-    shoeIcon.y = butY+300;
-
-    topIcon.x = butX;
-    topIcon.y = butY;
+    //add icons to buttons
+    accessoriesIcon.x = butX+210;
+    accessoriesIcon.y = butY+160;
+    bottomIcon.x = butX +10;
+    bottomIcon.y = butY+160;
+    hairIcon.x = butX+210;
+    hairIcon.y = butY+10;
+    shoeIcon.x = butX+10;
+    shoeIcon.y = butY+310;
+    topIcon.x = butX+10;
+    topIcon.y = butY+10;
 
     app.stage.addChild(accessoriesIcon);
     app.stage.addChild(bottomIcon);
     app.stage.addChild(hairIcon);
     app.stage.addChild(shoeIcon);
     app.stage.addChild(topIcon);
-
-    //box
-    let box = new PIXI.Graphics;
-    box.beginFill(0xe6e9f0);         
-    box.drawRoundedRect(0,0,400,window.innerHeight,15);   
-    app.stage.addChild(box);
-   
 
     app.stage.interactive = true
     
@@ -362,10 +315,7 @@ const main = async () => {
             0, window.innerHeight
         ]);
     });
-
-
     document.body.appendChild(app.view);
-
     app.ticker.add(update);
 };
 
