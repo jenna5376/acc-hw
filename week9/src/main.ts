@@ -16,11 +16,12 @@ let lightPoint: THREE.PointLight;
 let controls: OrbitControls;
 let stats: any;
 
-let cube: THREE.Mesh;
 let plane: THREE.Mesh;
 let group: THREE.Group;
-let exampleModel: THREE.Group;
-let exampleTexture: THREE.Texture;
+let group2: THREE.Group;
+let iceCreamModel: THREE.Group;
+let iceCreamModel2: THREE.Group;
+let cube: THREE.Mesh;
 
 import vertexShader from '../resources/shaders/shader.vert?raw';
 import fragmentShader from '../resources/shaders/shader.frag?raw';
@@ -41,7 +42,8 @@ function initScene() {
     scene = new THREE.Scene();
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 5;
+    camera.position.z = 8;
+    camera.position.y = 1.1;
 
     renderer = new THREE.WebGLRenderer();
     renderer.shadowMap.enabled = true;
@@ -52,33 +54,16 @@ function initScene() {
     document.body.appendChild(renderer.domElement);
 
     controls = new OrbitControls(camera, renderer.domElement);
-
-    lightAmbient = new THREE.AmbientLight(0x333333);
-    scene.add(lightAmbient);
-
-	// lightAmbient = new THREE.AmbientLight(0xffffff);
-	// scene.add(lightAmbient);
-
-    // Add a point light to add shadows
-    // https://github.com/mrdoob/three.js/pull/14087#issuecomment-431003830
     const shadowIntensity = 0.25;
 
-    lightPoint = new THREE.PointLight(0xffffff);
-    lightPoint.position.set(-0.5, 0.5, 4);
-    lightPoint.castShadow = true;
-    lightPoint.intensity = shadowIntensity;
-    scene.add(lightPoint);
-
+    /* 
+    still life was too bright with light due to cartoon mesh
 	lightPoint = new THREE.PointLight(0xffffff)
-	lightPoint.position.set(-0.5, 0.5, 4)
+	lightPoint.position.set(50, 50, 45)
+    lightPoint.rotateZ(30);
 	lightPoint.castShadow = true;
 	lightPoint.intensity = shadowIntensity;
 	scene.add(lightPoint)
-
-    const lightPoint2 = lightPoint.clone();
-    lightPoint2.intensity = 1 - shadowIntensity;
-    lightPoint2.castShadow = false;
-    scene.add(lightPoint2);
 
     const mapSize = 1024; // Default 512
     const cameraNear = 0.5; // Default 0.5
@@ -87,94 +72,118 @@ function initScene() {
     lightPoint.shadow.mapSize.height = mapSize;
     lightPoint.shadow.camera.near = cameraNear;
     lightPoint.shadow.camera.far = cameraFar;
+    */
+   
+    renderer.shadowMap.enabled = true;
 
-    // // Add a cube
-    // const geometryBox = new THREE.BoxGeometry();
-    // const materialBox = new THREE.MeshPhongMaterial({ color: 0x456789 });
-    // cube = new THREE.Mesh(geometryBox, materialBox);
-    // cube.castShadow = true;
-    // scene.add(cube);
+    //draw base for models
+    const geometryBox = new THREE.BoxGeometry(20,2,16);
+    const materialBox = new THREE.MeshToonMaterial({ color: 0x56768f});
+    cube = new THREE.Mesh(geometryBox, materialBox);
+    cube.castShadow = true;
+    cube.translateY(-3);
+    //cube.receiveShadow = true; //default
+    scene.add(cube);
 
-	const cubeGeometry = new THREE.BoxGeometry()
-	const cubeMaterial = new THREE.MeshPhongMaterial({color: 0xf0bbbb})
-	// cubeMaterial.wireframe = true;
-	cube = new THREE.Mesh(cubeGeometry, cubeMaterial)
-	cube.castShadow = true;
+    //create mesh for ice cream
+    const iceCreamMat = new THREE.MeshToonMaterial({color: 0xf2e0da})
+    const noseMat = new THREE.MeshToonMaterial({color: 0xc42b2b})
+    const eyeMat = new THREE.MeshToonMaterial({color: 0x111217})
+    const coneMat = new THREE.MeshToonMaterial({color: 0x947368})
 
-
+    //ice cream 1
 	group = new THREE.Group()
-	group.add(cube)
-
-	cube.position.set(-2, 0, 0)
-
 	scene.add(group)
-
-    // // load a texture
-    let textureMaterial: THREE.Material;
-	let textureLoader = new THREE.TextureLoader().setPath('../resources/textures/')
-    textureLoader.load('uv_grid_opengl.jpg', function (texture) {
-
-        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-        texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
-
-        exampleTexture = texture;
-
-		textureMaterial = new THREE.MeshBasicMaterial({map: texture});
-
-		cube.material = textureMaterial;
 
         const modelLoader = new GLTFLoader().setPath('../resources/models/');
 		modelLoader.load('icecream.gltf', (gltf) => {
-			exampleModel = gltf.scene;
-			console.log(exampleModel)
+			iceCreamModel = gltf.scene;
 
-			exampleModel.scale.set(0.01,0.01,0.01);
-			exampleModel.position.x = 2;
-
-			const icecreamMat = new THREE.MeshPhongMaterial({color: 0x22ff22})
+			iceCreamModel.scale.set(0.01,0.01,0.01);
+            iceCreamModel.position.x = 2;
 
 			interface gltfMesh extends THREE.Object3D<THREE.Event> {
 				material: THREE.Material
 			}
 
-			exampleModel.traverse((child: THREE.Object3D<THREE.Event>) => {
-				console.log(child)
-				console.log(child.type === "Mesh")
-				if (child.type === "Mesh") {
-					// (child as gltfMesh).material = teapotMat;
-					(child as gltfMesh).material = textureMaterial;
-				} 			
-			})
+            iceCreamModel.traverse((child: THREE.Object3D<THREE.Event>) =>{
+                if (child.type === "Mesh") {
+                    (child as gltfMesh).material = iceCreamMat;
+                } 		
+                if (child.name === "nose") {
+                    (child as gltfMesh).material = noseMat;
+                } 		
+                if (child.name === "eye1" || child.name === "eye2") {
+                    (child as gltfMesh).material = eyeMat;
+                } 
+                if (child.name === "nose") {
+                    (child as gltfMesh).material = noseMat;
+                } 
+                if (child.name === "cone") {
+                    (child as gltfMesh).material = coneMat;
+                } 
+            })
 
-			// scene.add(exampleModel)
-			group.add(exampleModel)
-		})
-    });
+            group.rotateY(0.3);
+			group.add(iceCreamModel)
+		});
+        
+        //not sure why but adding shadow caused the whole scene to turn black
+        //iceCreamModel.castShadow = true;
+
+        //ice cream 2
+        group2 = new THREE.Group()
+        scene.add(group2)
+
+		modelLoader.load('icecream2.gltf', (gltf) => {
+			iceCreamModel2 = gltf.scene;
+
+			iceCreamModel2.scale.set(0.01,0.01,0.01);
+			iceCreamModel2.position.x = -0.6;
+            iceCreamModel2.position.z = 0.4;
+            iceCreamModel2.rotateY(0.2);
+
+			const iceCreamMat2 = new THREE.MeshToonMaterial({color: 0xe89ea5})
+
+			interface gltfMesh extends THREE.Object3D<THREE.Event> {
+				material: THREE.Material
+			}
+
+            iceCreamModel2.traverse((child: THREE.Object3D<THREE.Event>) =>{
+                if (child.type === "Mesh") {
+                    (child as gltfMesh).material = iceCreamMat2;
+                } 		
+                if (child.name === "nose") {
+                    (child as gltfMesh).material = noseMat;
+                } 		
+                if (child.name === "eye1" || child.name === "eye2") {
+                    (child as gltfMesh).material = eyeMat;
+                } 
+                if (child.name === "nose") {
+                    (child as gltfMesh).material = noseMat;
+                } 
+                if (child.name === "cone") {
+                    (child as gltfMesh).material = coneMat;
+                } 
+            })
+
+            group2.rotateY(-0.1);
+			group2.add(iceCreamModel2)
+		});
 
 
-	
-
-
-    // // Add a plane
-    const geometryPlane = new THREE.PlaneBufferGeometry(6, 6, 10, 10);
-    const materialPlane = new THREE.MeshPhongMaterial({ 
-		color: 0x666666, 
+    // add plane
+    const geometryPlane = new THREE.PlaneBufferGeometry(20, 8, 10, 10);
+    const materialPlane = new THREE.MeshToonMaterial({ 
+		color: 0x6c9692, 
 		side: THREE.DoubleSide,
-		flatShading: true		
 	});
 
     const uniforms = {
         u_time: { type: 'f', value: 1.0 },
         u_resolution: { type: 'v2', value: new THREE.Vector2(800,800) },
-        // u_mouse: { type: 'v2', value: new THREE.Vector2() },
     };
-
-    // shaderMat = new THREE.ShaderMaterial({
-    //     uniforms: uniforms,
-    //     vertexShader: vertexShader,
-    //     fragmentShader: fragmentShader,
-    // });
-
+    
 	shaderMat = new THREE.ShaderMaterial({
 		uniforms: uniforms,
 		vertexShader: vertexShader,
@@ -183,11 +192,10 @@ function initScene() {
 	})
 
     plane = new THREE.Mesh(geometryPlane, materialPlane);
-    plane.position.z = -2;
+    plane.position.z = -6;
     plane.receiveShadow = true;
     scene.add(plane);
 
-    // // Init animation
     animate();
 }
 
@@ -234,30 +242,6 @@ function animate() {
     
     shaderMat.uniforms.u_time.value += delta;
     
-	const vertArray = plane.geometry.attributes.position;
-	// console.log(vertArray)
-
-    /*
-
-	for (let i = 0; i < vertArray.count; i++) {
-		vertArray.setZ(i, 
-			Math.sin(clock.getElapsedTime()+i-vertArray.count/2)*0.5
-			+ Math.cos(clock.getElapsedTime()-i)*0.5)
-	}
-	plane.geometry.attributes.position.needsUpdate = true;
-
-    if (exampleModel != undefined) {
-        exampleModel.rotateX(0.01);
-        exampleModel.rotateY(0.01);
-    }
-
-	if (exampleTexture) {
-		exampleTexture.center.set(0.5,0.5)
-		exampleTexture.rotation += delta
-	}
-
-    */
-
     if (stats) stats.update();
 
     if (controls) controls.update();
