@@ -20,4 +20,7 @@ Preexisting games:
 
 ![week10](./images/ac-room.png)
 
+###Plan:
 
+Week 1: create 3d models, set up click/place interaction with cubes
+Week 2: replace cubes with 3d models, add tutorial text
