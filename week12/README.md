@@ -6,8 +6,14 @@ For my final project, I would like to create a new iteration of my interaction p
 ### References
 
 Three.js projects:
-https://threejs.org/examples/#webgl_interactive_voxelpainter
-https://threejs.org/examples/#webgl_animation_keyframes
+- https://threejs.org/examples/#webgl_interactive_voxelpainter
+- https://threejs.org/examples/#webgl_animation_keyframes
+
+![alt text](./images/week10.png)
+
 
 Preexisting games:
+- Sims
+- Minecraft
+- Animal Crossing
 
