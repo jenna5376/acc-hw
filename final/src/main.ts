@@ -125,7 +125,7 @@ function dragObject(){
 
 		checkObject = draggable.userData.name;
 
-		if (checkObject != 'planks' && checkObject != 'walls' && checkObject != 'windows' && checkObject != 'floor'){
+		if (checkObject != 'planks' && checkObject != 'walls' && checkObject != 'wallsTop' && checkObject != 'windows' && checkObject != 'view' && checkObject != 'floor' ){
 			
 		raycaster.setFromCamera(moveMouse, (views[model.activeView] as BaseView3D).camera);
 		const found = raycaster.intersectObject((views[model.activeView] as BaseView3D).scene);
