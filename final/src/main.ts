@@ -11,9 +11,10 @@ import * as DAT from 'dat.gui';
 import { BaseView } from "./view/BaseView";
 import { BaseView2D } from './view/BaseView2D';
 import { BaseView3D } from './view/BaseView3D';
-import { ViewOne } from './view/DesignView';
+import { DesignView } from './view/DesignView';
 
-import { ViewFive } from './view/TutView';
+import { TutView } from './view/TutView';
+import { settings } from 'pixi.js';
 
 let model = {
 	mode: 0,
@@ -37,8 +38,8 @@ let controls: DragControls;
 let stats: any;
 
 
-let viewOne: ViewOne;
-let viewFive: ViewFive;
+let designView: DesignView;
+let tutView: TutView;
 let views: BaseView[] = [];
 let gui: DAT.GUI;
 let pixiApp: PIXI.Application = new PIXI.Application();
@@ -59,6 +60,10 @@ function initGUI() {
 	gui = new DAT.GUI();
 	updateGUI()
 }
+
+
+
+
 
 function updateGUI() {
 
@@ -106,11 +111,11 @@ function initScene() {
 	document.body.appendChild(renderer.domElement);
 	document.body.appendChild(pixiApp.view);
 
-	viewOne = new ViewOne(model, renderer);
-	views.push(viewOne);
+	designView = new DesignView(model, renderer);
+	views.push(designView);
 
-	viewFive = new ViewFive(model, pixiApp);
-	views.push(viewFive);
+	tutView = new TutView(model, pixiApp);
+	views.push(tutView);
 
 	model.pointerPosition = new THREE.Vector2(0,0);
 
@@ -155,7 +160,7 @@ function rotateObjectRight(){
 }
 
 let prevMat: Material;
-
+let colorChanged = false;
 
 function initListeners() {
 
@@ -164,8 +169,10 @@ function initListeners() {
 	window.addEventListener('click', (event =>{
 
 		if (draggable){
-			draggable = null as any
-			console.log("dropped draggable" + draggable.userData.name)
+			if (model.mode == 0){
+				draggable = null as any
+				console.log("dropped draggable" + draggable.userData.name)
+			}
 			return;
 		}
 
@@ -177,6 +184,7 @@ function initListeners() {
 	
 		if (found.length > 0 ){
 			draggable = found[0].object
+			colorChanged = false;
 			console.log("found draggale " + draggable.userData.name);
 		}
 	}))
@@ -211,12 +219,17 @@ function initListeners() {
 				}
 				updateGUI();
 				break;
+			case ' ':
+				colorChanged = true;
+				draggable = null as any
+				console.log("dropped draggable" + draggable.userData.name)
+				break;
 		}
 	});
 }
 
 function onWindowResize() {
-	viewOne.onWindowResize();
+	designView.onWindowResize();
 }
 
 function onPointerMove(event: any) {
@@ -234,15 +247,13 @@ function animate() {
 
 	let delta = clock.getDelta();
 
-	// shaderMat.uniforms.u_time.value += delta;
-
 	switch (model.activeView) {
 		case 0:
-			viewOne.update(clock);
+			designView.update(clock);
 			break;
 
 		case 1:
-			viewFive.update();
+			tutView.update();
 			break;
 
 		default:

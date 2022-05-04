@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js'
 import { Graphics } from 'pixi.js';
 import { BaseView2D } from "./BaseView2D";
 
-export class ViewFive extends BaseView2D {
+export class TutView extends BaseView2D {
 
 	graphics: PIXI.Graphics;
 

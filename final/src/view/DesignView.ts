@@ -25,7 +25,7 @@ import { BaseView3D } from "./BaseView3D";
 const aspect = window.innerWidth / window.innerHeight
 
 
-export class ViewOne extends BaseView3D{
+export class DesignView extends BaseView3D{
 
 	group: Group;
 	exampleModel: Group;
