@@ -32,8 +32,6 @@ let draggable: THREE.Object3D;
 
 let renderer: THREE.WebGLRenderer;
 let clock = new THREE.Clock();
-
-
 let controls: DragControls;
 let stats: any;
 
@@ -43,6 +41,7 @@ let tutView: TutView;
 let views: BaseView[] = [];
 let gui: DAT.GUI;
 let pixiApp: PIXI.Application = new PIXI.Application();
+
 
 function main() {
 	initScene();
@@ -60,10 +59,6 @@ function initGUI() {
 	gui = new DAT.GUI();
 	updateGUI()
 }
-
-
-
-
 
 function updateGUI() {
 
@@ -105,7 +100,7 @@ function initScene() {
 
 	pixiApp.renderer.view.style.position = 'absolute';
 	pixiApp.renderer.view.style.display = 'none';
-	pixiApp.renderer.backgroundColor = 0xe9ffc2;
+	pixiApp.renderer.backgroundColor = 0xa69585;
 	pixiApp.renderer.resize(window.innerWidth, window.innerHeight);
 
 	document.body.appendChild(renderer.domElement);
@@ -137,10 +132,8 @@ function dragObject(){
 		
 		if (found.length >0){
 			for (let o of found){
-	
 				draggable.position.x = o.point.x
 				draggable.position.z = o.point.z
-			
 			}
 		}
 	}

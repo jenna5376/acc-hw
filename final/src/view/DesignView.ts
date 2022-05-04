@@ -24,7 +24,6 @@ import { BaseView3D } from "./BaseView3D";
 
 const aspect = window.innerWidth / window.innerHeight
 
-
 export class DesignView extends BaseView3D{
 
 	group: Group;
@@ -54,49 +53,28 @@ export class DesignView extends BaseView3D{
 		this.lightPoint.castShadow = true;
 		this.lightPoint.intensity = 0.4;
 		this.scene.add(this.lightPoint);
+		
+		const modelLoader = new GLTFLoader().setPath('../resources/models/');
+		modelLoader.load('room.gltf', (gltf) => {
+			
+			this.exampleModel = gltf.scene;
+			this.exampleModel.position.set(0,-0.5,0);
+			this.exampleModel.scale.set(1, 1, 1);
 
-		let textureMaterial: Material;
-		let textureLoader = new TextureLoader().setPath('../resources/textures/');
-		textureLoader.load('uv_grid_opengl.jpg', (texture) => {
-			texture.wrapS = texture.wrapT = RepeatWrapping;
-			texture.anisotropy = this.renderer.capabilities.getMaxAnisotropy();
-
-			this.exampleTexture = texture;
-
-			textureMaterial = new MeshBasicMaterial({ map: texture });
-
-			const modelLoader = new GLTFLoader().setPath('../resources/models/');
-			modelLoader.load('room.gltf', (gltf) => {
-				
-				this.exampleModel = gltf.scene;
-				this.exampleModel.position.set(0,-0.5,0);
-				this.exampleModel.scale.set(1, 1, 1);
-
-				const newnewMat = new MeshPhongMaterial({color : 0xabdbb8})
-
-				const newMat = new MeshPhongMaterial({color : 0xabdbb8})
-				
-				this.exampleModel.traverse((child: THREE.Object3D<THREE.Event>) => {
-				
-					if (child.type == 'mesh'){
-							(child as gltfMesh).material = newnewMat;
-					}
-
-				
-				});
-
-				// scene.add(exampleModel)
-				this.group.add(this.exampleModel);
+			const newMat = new MeshPhongMaterial({color : 0xabdbb8})
+			
+			this.exampleModel.traverse((child: THREE.Object3D<THREE.Event>) => {
+				if (child.type == 'mesh'){
+						(child as gltfMesh).material = newMat;
+				}
 			});
+			this.group.add(this.exampleModel);
 		});
 	}
-
 	update(clock: Clock): void {
 		this.group.scale.set(this.model.zoom, this.model.zoom, this.model.zoom);
-
 	}
 }
-
 interface gltfMesh extends THREE.Object3D<THREE.Event> {
 	material: THREE.Material;
 }

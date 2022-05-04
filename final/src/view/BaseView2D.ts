@@ -12,7 +12,7 @@ export class BaseView2D extends BaseView {
 		this.scene = new PIXI.Container()
 		app.stage.addChild(this.scene)
 	}
-
+	
 	update(): void {
 	}
 
