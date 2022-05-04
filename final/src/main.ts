@@ -16,15 +16,13 @@ import { ViewOne } from './view/DesignView';
 import { ViewFive } from './view/TutView';
 
 let model = {
-	groupX: 0,
-	groupY: 0,
-	groupAngle: 0,
-	color: (0),
+	mode: 0,
+	color: 0xffffff,
+	d: 2,
+	zoom: 1,
 	activeView: 1,
 	pointerPosition: new THREE.Vector2(0,0),
 }
-
-
 
 let raycaster = new THREE.Raycaster();
 let clickMouse = new THREE.Vector2();
@@ -40,18 +38,10 @@ let stats: any;
 
 
 let viewOne: ViewOne;
-
 let viewFive: ViewFive;
-
 let views: BaseView[] = [];
-
 let gui: DAT.GUI;
-
 let pixiApp: PIXI.Application = new PIXI.Application();
-
-
-
-// let shaderMat: ShaderMaterial;
 
 function main() {
 	initScene();
@@ -70,17 +60,8 @@ function initGUI() {
 	updateGUI()
 }
 
-
-   var settings = {
-
-	mode: 0,
-	color: 0xffffff
-   }
-
-
 function updateGUI() {
 
-	console.log(gui.__folders);
 	if (gui.__folders.group) {
 		gui.removeFolder(gui.__folders.group);
 	}
@@ -89,11 +70,13 @@ function updateGUI() {
 		case 0:
 			const groupControls = gui.addFolder('group');
 			groupControls.open();
-			groupControls.add(settings, 'mode', { build: 0, color: 1 } )
+			groupControls.add(model, 'mode', { build: 0, color: 1 } )
 			.onChange(updateGUI)
 
-			if (settings.mode == 1){
-			groupControls.addColor(settings, 'color') 
+			groupControls.add(model, 'zoom', 0.5,3,0.5)
+
+			if (model.mode == 1){
+			groupControls.addColor(model, 'color') 
 				.onChange(changeColor)
 			}
 			break;
@@ -104,12 +87,8 @@ function updateGUI() {
 }
 
 function changeColor(){
-	const newMat = new MeshPhongMaterial({ color: settings.color });
+	const newMat = new MeshPhongMaterial({ color: model.color });
 	(draggable as gltfMesh).material = newMat;
-}
-
-function hoverObject(){
-
 }
 
 function initScene() {
@@ -164,7 +143,7 @@ function dragObject(){
 }
 
 function rotateObjectLeft(){
-	if (draggable != null){
+	if (draggable != null && draggable.userData.name != 'planks' && draggable.userData.name != 'walls' && draggable.userData.name != 'windows' && draggable.userData.name != 'floor'){
 		draggable.rotateY(-Math.PI/2);
 	}
 }
@@ -181,56 +160,43 @@ let prevMat: Material;
 function initListeners() {
 
 	window.addEventListener('resize', onWindowResize, false);
-
 	window.addEventListener('pointermove', onPointerMove);
-
 	window.addEventListener('click', (event =>{
 
 		if (draggable){
-			
-			console.log('dropping draggable')
 			draggable = null as any
-			
+			console.log("dropped draggable" + draggable.userData.name)
 			return;
-
 		}
 
 		clickMouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 		clickMouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 		
 		raycaster.setFromCamera(clickMouse, (views[model.activeView] as BaseView3D).camera);
-
 		const found = raycaster.intersectObject((views[model.activeView] as BaseView3D).scene);
 	
 		if (found.length > 0 ){
 			draggable = found[0].object
 			console.log("found draggale " + draggable.userData.name);
-			
 		}
-	
 	}))
 
 	window.addEventListener('mousemove', event =>{
 		moveMouse.x = (event.clientX / window.innerWidth) * 2 -1;
 		moveMouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
 	})
 
 	window.addEventListener('keydown', (event) => {
 		const { key } = event;
 
 		switch (key) {
-			case 'p':
-				settings.mode = 0;
-			case 'b':
-				settings.mode = 0;
 			case ',': 
-				if (settings.mode == 0){
+				if (model.mode == 0){
 				rotateObjectLeft();
 			}
 				break;
 			case '.': 
-				if (settings.mode == 0){
+				if (model.mode == 0){
 				rotateObjectRight();
 			}
 				break;
@@ -238,7 +204,6 @@ function initListeners() {
 				model.activeView = (model.activeView + 1) % views.length
 				updateGUI();
 				break;
-
 			case 'ArrowLeft':
 				model.activeView = (model.activeView - 1)
 				if (model.activeView < 0) {
@@ -252,26 +217,19 @@ function initListeners() {
 
 function onWindowResize() {
 	viewOne.onWindowResize();
-
 }
 
 function onPointerMove(event: any) {
 	model.pointerPosition.x = (event.clientX / window.innerWidth) * 2 - 1;
 	model.pointerPosition.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-	//viewTwo.onMouseMove()
 }
 
-
 function animate() {
-
 	requestAnimationFrame(() => {
 		animate();
-		console.log(settings.mode)
-		if (settings.mode == 0){
+		if (model.mode == 0){
 			dragObject();
 		}
-		
 	});
 
 	let delta = clock.getDelta();
@@ -290,30 +248,20 @@ function animate() {
 		default:
 			break;
 	}
-	
-
-	if (stats) stats.update();
-
-	// if (controls) controls.update();
 
 	if(views[model.activeView] instanceof BaseView3D) {
 		renderer.domElement.style.display = 'block'
 		pixiApp.renderer.view.style.display = 'none'
-
 		renderer.render((views[model.activeView] as BaseView3D).scene, (views[model.activeView] as BaseView3D).camera);
-	
 	}
 
 	if (views[model.activeView] instanceof BaseView2D) {
 		renderer.domElement.style.display = 'none'
 		pixiApp.renderer.view.style.display = 'block'
-
-		// 
 	}
 }
 
 main();
-
 
 interface MeshObj extends THREE.Object3D<THREE.Event> {
 	material: THREE.MeshPhongMaterial;

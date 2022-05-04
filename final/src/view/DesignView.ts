@@ -22,6 +22,9 @@ import {
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { BaseView3D } from "./BaseView3D";
 
+const aspect = window.innerWidth / window.innerHeight
+
+
 export class ViewOne extends BaseView3D{
 
 	group: Group;
@@ -38,7 +41,7 @@ export class ViewOne extends BaseView3D{
 		this.group = new Group();
 		this.scene.add(this.group);
 	
-		this.scene.background = new Color(0xa1c9e6);
+		this.scene.background = new Color(0xded6ce);
 
 		this.camera.lookAt(this.scene.position);
 
@@ -74,7 +77,6 @@ export class ViewOne extends BaseView3D{
 				const newMat = new MeshPhongMaterial({color : 0xabdbb8})
 				
 				this.exampleModel.traverse((child: THREE.Object3D<THREE.Event>) => {
-					console.log(child);
 				
 					if (child.type == 'mesh'){
 							(child as gltfMesh).material = newnewMat;
@@ -90,11 +92,8 @@ export class ViewOne extends BaseView3D{
 	}
 
 	update(clock: Clock): void {
+		this.group.scale.set(this.model.zoom, this.model.zoom, this.model.zoom);
 
-		// group.rotateZ(delta);
-		this.group.rotation.set(0, 0, this.model.groupAngle);
-		this.group.position.set(this.model.groupX, this.model.groupY, 0)
-		
 	}
 }
 
